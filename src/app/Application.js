@@ -29,13 +29,11 @@ export default class Application extends EventEmitter {
    * The APP_READY event should be emitted at the end of this method.
    */
   async init() {
-    fetch('https://swapi.dev/api/planets')
-      .then(response => response.json())
-      .then(data => {
-        this.data.count = data.count;
-        this.data.planets = data.results;
-      });
+    const data = await fetch('https://swapi.booost.bg/api/planets');
+    const jsonData = await data.json();
 
+    this.data.count = jsonData.count;
+    this.data.planets = jsonData.results;
     this.emit(Application.events.APP_READY);
   }
 }
