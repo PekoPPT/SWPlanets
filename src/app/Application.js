@@ -23,7 +23,7 @@ export default class Application extends EventEmitter {
   }
 
   getNumberOfPlanets(data) {
-    return data.results.length;
+    return data.count;
   }
 
   getPlanetsArray(data) {
