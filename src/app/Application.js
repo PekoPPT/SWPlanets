@@ -22,7 +22,7 @@ export default class Application extends EventEmitter {
     return EVENTS;
   }
 
-  getNumberOfPlanets(data) {
+  getCount(data) {
     return data.count;
   }
 
@@ -40,7 +40,7 @@ export default class Application extends EventEmitter {
     const data = await fetch('https://swapi.booost.bg/api/planets');
     const jsonData = await data.json();
 
-    this.data.count = this.getNumberOfPlanets(jsonData);
+    this.data.count = this.getCount(jsonData);
     this.data.planets = this.getPlanetsArray(jsonData);
     this.emit(Application.events.APP_READY);
   }
