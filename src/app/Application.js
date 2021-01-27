@@ -22,6 +22,14 @@ export default class Application extends EventEmitter {
     return EVENTS;
   }
 
+  getNumberOfPlanets(data) {
+    return data.results.length;
+  }
+
+  getPlanetsArray(data) {
+    return data.results;
+  }
+
   /**
    * Initializes the app.
    * Called when the DOM has loaded. You can initiate your custom classes here
@@ -32,8 +40,8 @@ export default class Application extends EventEmitter {
     const data = await fetch('https://swapi.booost.bg/api/planets');
     const jsonData = await data.json();
 
-    this.data.count = jsonData.count;
-    this.data.planets = jsonData.results;
+    this.data.count = this.getNumberOfPlanets(jsonData);
+    this.data.planets = this.getPlanetsArray(jsonData);
     this.emit(Application.events.APP_READY);
   }
 }
