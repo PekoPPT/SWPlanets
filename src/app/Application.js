@@ -13,21 +13,16 @@ export default class Application extends EventEmitter {
   constructor() {
     super();
     this.config = config;
-    this.data = {};
+    this.data = {
+      count: 0,
+      planets: [],
+    };
 
     this.init();
   }
 
   static get events() {
     return EVENTS;
-  }
-
-  getCount(data) {
-    return data.count;
-  }
-
-  getPlanetsArray(data) {
-    return data.results;
   }
 
   /**
@@ -37,11 +32,21 @@ export default class Application extends EventEmitter {
    * The APP_READY event should be emitted at the end of this method.
    */
   async init() {
-    const data = await fetch('https://swapi.booost.bg/api/planets');
-    const jsonData = await data.json();
+    const apiUrl = "https://swapi.booost.bg/api/planets";
+    const rootData = await fetch(apiUrl);
+    const jsonRootData = await rootData.json();
 
-    this.data.count = this.getCount(jsonData);
-    this.data.planets = this.getPlanetsArray(jsonData);
+    this.data.count = jsonRootData.count;
+    await this.data.planets.push(...jsonRootData.results);
+
+    let pageCounter = 2;
+    while (jsonRootData.count !== this.data.planets.length) {
+      const nextPageRawData = await fetch(apiUrl + "/?page=" + pageCounter);
+      let jsonData = await nextPageRawData.json();
+      this.data.planets.push(...jsonData.results);
+      pageCounter += 1;
+    }
+
     this.emit(Application.events.APP_READY);
   }
 }
